@@ -28,7 +28,7 @@ Austrian shapefile - postal code level
 ## Python dependencies
 
 ```.ps1
-python -m pip install geopandas matplotlib numpy pandas xlrd
+python -m pip install geopandas matplotlib numpy pandas requests xlrd
 ```
 
 ## R dependencies

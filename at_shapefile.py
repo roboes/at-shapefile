@@ -1,5 +1,5 @@
 ## AT shapefile
-# Last update: 2023-05-23
+# Last update: 2023-05-25
 
 
 ###############
@@ -14,7 +14,6 @@ globals().clear()
 import os
 from io import BytesIO
 import re
-import requests
 from urllib.request import Request, urlopen
 from zipfile import ZipFile
 
@@ -22,6 +21,8 @@ import geopandas as gpd
 from matplotlib import pyplot
 import numpy as np
 import pandas as pd
+import requests
+import xlrd
 
 
 # Set working directory
@@ -216,24 +217,30 @@ del at_municipalities, at_postalcodes
 
 
 # Austria Shapefile - state level (first-level administrative divisions of Austria)
-pyplot.show(at_shapefile
+(at_shapefile
     .filter(items=['state', 'geometry'])
     .dissolve(by='state', as_index=False, sort=True, dropna=True)
     .plot()
 )
 
+pyplot.show()
+
 
 # Austria Shapefile - municipality level (third-level administrative divisions of Austria)
-pyplot.show(at_shapefile
+(at_shapefile
     .filter(items=['state', 'municipality', 'geometry'])
     .dissolve(by='municipality', as_index=False, sort=True, dropna=True)
     .plot()
 )
 
+pyplot.show()
+
 
 # Austria Shapefile - postal code level
-pyplot.show(at_shapefile
+(at_shapefile
     .filter(items=['postal_code', 'geometry'])
     .dissolve(by='postal_code', as_index=False, sort=True, dropna=True)
     .plot()
 )
+
+pyplot.show()
