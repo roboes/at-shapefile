@@ -1,5 +1,5 @@
 ## AT shapefile
-# Last update: 2023-05-25
+# Last update: 2023-05-31
 
 
 ###############
@@ -158,7 +158,7 @@ at_localities = (pd.read_csv(filepath_or_buffer='http://www.statistik.at/verzeic
     .filter(items=['political_district_code', 'postal_code'])
 
     # Remove duplicate rows
-    .drop_duplicates(keep='first', ignore_index=True)
+    .drop_duplicates(subset=None, keep='first', ignore_index=True)
 
     # Left join 'at_political_districts'
     .merge(at_political_districts, how='left', on=['political_district_code'], indicator=False)
