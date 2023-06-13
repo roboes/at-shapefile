@@ -184,7 +184,8 @@ at_localities = (pd.read_csv(filepath_or_buffer='http://www.statistik.at/verzeic
 # Gliederung Österreichs in Gemeinden - Source: Statistik Austria, https://data.statistik.gv.at/web/meta.jsp?dataset=OGDEXT_GEM_1
 
 # Download
-ZipFile(file=BytesIO(initial_bytes=requests.get(url='https://data.statistik.gv.at/data/OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101.zip').content), mode='r').extractall(path='OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101')
+with ZipFile(file=BytesIO(initial_bytes=requests.get(url='https://data.statistik.gv.at/data/OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101.zip').content), mode='r')) as zip_file:
+    zip_file.extractall(path='OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101')
 
 
 # Import
