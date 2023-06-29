@@ -1,4 +1,4 @@
-## AT shapefile
+## AT Shapefile
 # Last update: 2023-05-23
 
 
@@ -29,7 +29,7 @@ rm(list=ls())
 
 
 ##############
-# AT shapefile
+# AT Shapefile
 ##############
 
 ## Postlexikon
