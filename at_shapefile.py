@@ -1,4 +1,4 @@
-## AT shapefile
+## AT Shapefile
 # Last update: 2023-05-31
 
 
@@ -32,7 +32,7 @@ os.chdir(path=os.path.join(os.path.expanduser('~'), 'Downloads'))
 
 
 ##############
-# AT shapefile
+# AT Shapefile
 ##############
 
 ## Postlexikon
