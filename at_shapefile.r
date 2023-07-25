@@ -2,6 +2,9 @@
 # Last update: 2023-05-23
 
 
+### About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R.
+
+
 ###############
 # Initial Setup
 ###############
@@ -63,7 +66,7 @@ at_postalcodes <- read_excel(path = "AT Postal Codes.xls", sheet = "Plz_Anhang",
 
 
 
-## Austria, Municipality List sort by Identfier
+## Austria, Municipality List sort by Identifier
 # Österreichisch, Gemeindeliste sortiert nach Gemeindekennziffer - Source: Statistik Austria, https://www.statistik.at/services/tools/services/regionales/regionale-gliederungen/
 
 
