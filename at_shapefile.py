@@ -49,7 +49,7 @@ page_source = (
         ),
     )
     .read()
-    .decode(encoding='utf8')
+    .decode(encoding='utf-8')
 )
 page_source = page_source.split(sep='\n')
 
@@ -168,7 +168,7 @@ at_municipalities = (
         skipfooter=1,
         dtype=None,
         engine='python',
-        encoding='utf8',
+        encoding='utf-8',
     )
     # Rename columns
     .rename(
@@ -201,7 +201,7 @@ at_political_districts = (
         skipfooter=1,
         dtype=None,
         engine='python',
-        encoding='utf8',
+        encoding='utf-8',
     )
     # Rename columns
     .rename(
@@ -234,7 +234,7 @@ at_localities = (
         skipfooter=1,
         dtype=None,
         engine='python',
-        encoding='utf8',
+        encoding='utf-8',
     )
     # Rename columns
     .rename(
@@ -307,7 +307,7 @@ at_shapefile = (
     gpd.read_file(
         filename='OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101/STATISTIK_AUSTRIA_GEM_20230101.shp',
         layer='STATISTIK_AUSTRIA_GEM_20230101',
-        encoding='utf8',
+        encoding='utf-8',
     )
     # Rename columns
     .rename(columns={'g_id': 'municipality_code', 'g_name': 'municipality'})
