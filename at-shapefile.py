@@ -1,5 +1,5 @@
 ## AT Shapefile
-# Last update: 2023-07-20
+# Last update: 2023-09-03
 
 
 """About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R."""
@@ -18,15 +18,13 @@ import os
 from io import BytesIO
 import re
 from urllib.request import Request, urlopen
-from zipfile import ZipFile
+from zipfile import ZipFile, ZIP_DEFLATED
 
 import geopandas as gpd
 from matplotlib import pyplot
 import numpy as np
 import pandas as pd
 import requests
-
-# import xlrd
 
 
 # Set working directory
@@ -66,9 +64,11 @@ plz_verzeichnis = re.sub(
 # Download and import
 at_postalcodes = (
     pd.read_excel(
-        io=urlopen(
-            url=Request(url=plz_verzeichnis, headers={'User-Agent': 'Mozilla'}),
-        ).read(),
+        io=BytesIO(
+            urlopen(
+                url=Request(url=plz_verzeichnis, headers={'User-Agent': 'Mozilla'}),
+            ).read(),
+        ),
         sheet_name='Plz_Anhang',
         header=0,
         index_col=None,
@@ -169,6 +169,7 @@ at_municipalities = (
         dtype=None,
         engine='python',
         encoding='utf-8',
+        keep_default_na=True,
     )
     # Rename columns
     .rename(
@@ -202,6 +203,7 @@ at_political_districts = (
         dtype=None,
         engine='python',
         encoding='utf-8',
+        keep_default_na=True,
     )
     # Rename columns
     .rename(
@@ -235,6 +237,7 @@ at_localities = (
         dtype=None,
         engine='python',
         encoding='utf-8',
+        keep_default_na=True,
     )
     # Rename columns
     .rename(
@@ -264,7 +267,7 @@ at_localities = (
     .drop_duplicates(subset=None, keep='first', ignore_index=True)
     # Left join 'at_political_districts'
     .merge(
-        at_political_districts,
+        right=at_political_districts,
         how='left',
         on=['political_district_code'],
         indicator=False,
@@ -280,9 +283,9 @@ at_localities = (
 
 # Test
 (
-    at_localities[at_localities.duplicated(subset=['postal_code'], keep=False) is True]
-    .reset_index(level=None, drop=True)
-    .sort_values(by=['postal_code'], ignore_index=True)
+    at_localities.loc[
+        at_localities.duplicated(subset=['postal_code'], keep=False)
+    ].sort_values(by=['postal_code'], ignore_index=True)
 )
 
 
@@ -298,6 +301,7 @@ with ZipFile(
         ).content,
     ),
     mode='r',
+    compression=ZIP_DEFLATED,
 ) as zip_file:
     zip_file.extractall(path='OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101')
 
@@ -315,13 +319,13 @@ at_shapefile = (
     .astype(dtype={'municipality_code': 'str'})
     # Left join 'at_municipalities'
     .merge(
-        at_municipalities.filter(items=['municipality_code', 'postal_code']),
+        right=at_municipalities.filter(items=['municipality_code', 'postal_code']),
         how='left',
         on=['municipality_code'],
         indicator=False,
     )
     # Left join 'at_postalcodes'
-    .merge(at_postalcodes, how='left', on=['postal_code'], indicator=False)
+    .merge(right=at_postalcodes, how='left', on=['postal_code'], indicator=False)
     # Select columns
     .filter(
         items=[
