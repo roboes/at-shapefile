@@ -26,8 +26,6 @@ import numpy as np
 import pandas as pd
 import requests
 
-# import xlrd
-
 
 # Set working directory
 os.chdir(path=os.path.join(os.path.expanduser('~'), 'Downloads'))
