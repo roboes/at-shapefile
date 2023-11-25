@@ -1,5 +1,5 @@
 ## AT Shapefile
-# Last update: 2023-09-03
+# Last update: 2023-11-25
 
 
 """About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R."""
@@ -58,6 +58,7 @@ plz_verzeichnis = re.sub(
     pattern=r'^.*href="(.*\.xls)?.*$',
     repl=r'\1',
     string=plz_verzeichnis,
+    flags=0,
 )
 
 
