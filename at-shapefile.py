@@ -1,5 +1,5 @@
 ## AT Shapefile
-# Last update: 2023-09-03
+# Last update: 2023-11-29
 
 
 """About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R."""
@@ -22,7 +22,6 @@ from zipfile import ZipFile, ZIP_DEFLATED
 
 import geopandas as gpd
 from matplotlib import pyplot
-import numpy as np
 import pandas as pd
 import requests
 
@@ -58,7 +57,21 @@ plz_verzeichnis = re.sub(
     pattern=r'^.*href="(.*\.xls)?.*$',
     repl=r'\1',
     string=plz_verzeichnis,
+    flags=0,
 )
+
+
+# Austrian states mapping dictionary
+austrian_states_mapping = {
+    'W': 'Vienna',
+    'N': 'Lower Austria',
+    'B': 'Burgenland',
+    'O': 'Upper Austria',
+    'Sa': 'Salzburg',
+    'T': 'Tyrol',
+    'V': 'Vorarlberg',
+    'St': 'Styria',
+}
 
 
 # Download and import
@@ -88,70 +101,14 @@ at_postalcodes = (
     # Select columns
     .filter(items=['country', 'postal_code', 'state', 'city'])
     # Transform columns
-    .assign(
-        state=lambda row: np.where(
-            row['state'] == 'W',
-            'Vienna',
-            (
-                np.where(
-                    row['state'] == 'N',
-                    'Lower Austria',
-                    (
-                        np.where(
-                            row['state'] == 'B',
-                            'Burgenland',
-                            (
-                                np.where(
-                                    row['state'] == 'O',
-                                    'Upper Austria',
-                                    (
-                                        np.where(
-                                            row['state'] == 'Sa',
-                                            'Salzburg',
-                                            (
-                                                np.where(
-                                                    row['state'] == 'T',
-                                                    'Tyrol',
-                                                    (
-                                                        np.where(
-                                                            row['state'] == 'V',
-                                                            'Vorarlberg',
-                                                            (
-                                                                np.where(
-                                                                    row['state']
-                                                                    == 'St',
-                                                                    'Styria',
-                                                                    (
-                                                                        np.where(
-                                                                            row['state']
-                                                                            == 'K',
-                                                                            'Carinthia',
-                                                                            None,
-                                                                        )
-                                                                    ),
-                                                                )
-                                                            ),
-                                                        )
-                                                    ),
-                                                )
-                                            ),
-                                        )
-                                    ),
-                                )
-                            ),
-                        )
-                    ),
-                )
-            ),
-        ),
-    )
+    .assign(state=lambda row: row['state'].replace(austrian_states_mapping))
     # Rearrange rows
     .sort_values(by=['country', 'postal_code'], ignore_index=True)
 )
 
 
 # Delete objects
-del page_source, plz_verzeichnis
+del page_source, plz_verzeichnis, austrian_states_mapping
 
 
 ## Austria, Municipality List sort by Identifier
