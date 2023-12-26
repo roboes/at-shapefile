@@ -13,13 +13,13 @@ The code was written in both Python and R; both codes are analogous.
 Austrian shapefile - municipality level (third-level administrative divisions of Austria)
 
 <p align="center">
-<img src="examples/shapefile_austria_municipality.png" alt="Shapefile Austria" width=650>
+<img src="./media/shapefile_austria_municipality.png" alt="Shapefile Austria" width=650>
 </p>
 
 Austrian shapefile - postal code level
 
 <p align="center">
-<img src="examples/shapefile_austria_postal_code.png" alt="Shapefile Austria" width=650>
+<img src="./media/shapefile_austria_postal_code.png" alt="Shapefile Austria" width=650>
 </p>
 
 
