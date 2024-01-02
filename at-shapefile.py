@@ -262,6 +262,8 @@ with ZipFile(
 ) as zip_file:
     zip_file.extractall(path='OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101')
 
+# Delete objects
+del zip_file
 
 # Import
 at_shapefile = (
