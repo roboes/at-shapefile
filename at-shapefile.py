@@ -97,7 +97,7 @@ at_postalcodes = (
     # Create 'country' column
     .assign(country='AT')
     # Filter rows
-    .query('adressierbar == "Ja"')
+    .query(expr='adressierbar == "Ja"')
     # Select columns
     .filter(items=['country', 'postal_code', 'state', 'city'])
     # Transform columns
@@ -255,6 +255,7 @@ with ZipFile(
         initial_bytes=requests.get(
             url='https://data.statistik.gv.at/data/OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101.zip',
             timeout=5,
+            verify=True,
         ).content,
     ),
     mode='r',
