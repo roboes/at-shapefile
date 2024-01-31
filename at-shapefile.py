@@ -1,5 +1,5 @@
 ## AT Shapefile
-# Last update: 2023-11-29
+# Last update: 2024-01-09
 
 
 """About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R."""
@@ -54,7 +54,7 @@ page_source = page_source.split(sep='\n')
 # Get latest PLZ Verzeichnis .xls file
 plz_verzeichnis = [s for s in page_source if 'title="PLZ Verzeichnis"' in s][0]
 plz_verzeichnis = re.sub(
-    pattern=r'^.*href="(.*\.xls)?.*$',
+    pattern=r'^.*href="(.*\.xlsx)?.*$',
     repl=r'\1',
     string=plz_verzeichnis,
     flags=0,
@@ -88,7 +88,7 @@ at_postalcodes = (
         skiprows=0,
         skipfooter=0,
         dtype=None,
-        engine='xlrd',
+        engine='openpyxl',
     )
     # Rename columns
     .rename(columns={'PLZ': 'postal_code', 'Ort': 'city', 'Bundesland': 'state'})
@@ -97,7 +97,7 @@ at_postalcodes = (
     # Create 'country' column
     .assign(country='AT')
     # Filter rows
-    .query('adressierbar == "Ja"')
+    .query(expr='adressierbar == "Ja"')
     # Select columns
     .filter(items=['country', 'postal_code', 'state', 'city'])
     # Transform columns
@@ -249,12 +249,13 @@ at_localities = (
 ## Division of Austria into municipalities
 # Gliederung Österreichs in Gemeinden - Source: Statistik Austria, https://data.statistik.gv.at/web/meta.jsp?dataset=OGDEXT_GEM_1
 
-# Download
+# Download Shapefile
 with ZipFile(
     file=BytesIO(
         initial_bytes=requests.get(
             url='https://data.statistik.gv.at/data/OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101.zip',
             timeout=5,
+            verify=True,
         ).content,
     ),
     mode='r',
@@ -262,12 +263,17 @@ with ZipFile(
 ) as zip_file:
     zip_file.extractall(path='OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101')
 
+# Delete objects
+del zip_file, ZIP_DEFLATED
+
 
 # Import
 at_shapefile = (
     gpd.read_file(
         filename='OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101/STATISTIK_AUSTRIA_GEM_20230101.shp',
         layer='STATISTIK_AUSTRIA_GEM_20230101',
+        include_fields=['g_id', 'g_name', 'geometry'],
+        driver=None,
         encoding='utf-8',
     )
     # Rename columns

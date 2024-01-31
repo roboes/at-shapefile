@@ -1,5 +1,5 @@
 ## AT Shapefile
-# Last update: 2023-05-23
+# Last update: 2024-01-09
 
 
 ### About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R.
@@ -38,12 +38,12 @@ rm(list=ls())
 ## Postlexikon
 # Postlexikon - Source: Post AG, https://www.post.at/g/c/postlexikon
 
-# Download
-download.file("https://assets.post.at/-/media/Dokumente/De/Geschaeftlich/Werben/PLZ_Verzeichnis-20230503.xls", "AT Postal Codes.xls", mode = "wb")
+# Download Shapefile
+download.file("https://assets.post.at/-/media/Dokumente/De/Geschaeftlich/Werben/PLZ_Verzeichnis_20240108.xlsx", "AT Postal Codes.xlsx", mode = "wb")
 
 
 # Import
-at_postalcodes <- read_excel(path = "AT Postal Codes.xls", sheet = "Plz_Anhang", col_names = TRUE) |>
+at_postalcodes <- read_excel(path = "AT Postal Codes.xlsx", sheet = "Plz_Anhang", col_names = TRUE) |>
 	rename(postal_code = PLZ, city = Ort, state = Bundesland) |>
 	mutate(across(c(postal_code), as.character)) |>
 	mutate(country = "AT") |>
