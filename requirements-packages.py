@@ -1,9 +1,9 @@
 ## Requirements Packages
-# Last update: 2023-09-27
+# Last update: 2024-01-09
 
 
 """Add not imported (but required) Python packages to this file so that pipreqs adds them as a dependency to the "requirements.txt" file."""
 
-import xlrd
+import openpyxl
 
-xlrd.__version__
+openpyxl.__version__

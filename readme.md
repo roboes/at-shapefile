@@ -7,7 +7,6 @@
 This repository aims to create and manipulate Austrian shapefile into multiple levels, such as state level (first-level administrative divisions of Austria), municipality level (third-level administrative divisions of Austria) and postal code level.
 The code was written in both Python and R; both codes are analogous.
 
-
 ## Output
 
 Austrian shapefile - municipality level (third-level administrative divisions of Austria)
@@ -22,7 +21,6 @@ Austrian shapefile - postal code level
 <img src="./media/shapefile_austria_postal_code.png" alt="Shapefile Austria" width=650>
 </p>
 
-
 # Usage
 
 ## Python dependencies
@@ -36,7 +34,6 @@ python -m pip install geopandas matplotlib numpy pandas requests xlrd
 ```.r
 install.packages(c("readxl", "sf", "tidyverse"))
 ```
-
 
 # See also
 
