@@ -1,5 +1,5 @@
 ## AT Shapefile
-# Last update: 2024-01-09
+# Last update: 2024-03-26
 
 
 """About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R."""
@@ -107,7 +107,12 @@ at_postalcodes = (
     # Select columns
     .filter(items=['country', 'postal_code', 'state', 'city'])
     # Transform columns
-    .assign(state=lambda row: row['state'].replace(austrian_states_mapping))
+    .assign(
+        state=lambda row: row['state'].replace(
+            to_replace=austrian_states_mapping,
+            regex=True,
+        ),
+    )
     # Rearrange rows
     .sort_values(by=['country', 'postal_code'], ignore_index=True)
 )
