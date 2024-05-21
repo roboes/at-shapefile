@@ -48,7 +48,7 @@ page_source = (
     urlopen(
         url=Request(
             url='https://www.post.at/g/c/postlexikon',
-            headers={'User-Agent': 'Mozilla'},
+            headers={'User-Agent': 'Mozilla/5.0'},
         ),
     )
     .read()
@@ -85,7 +85,7 @@ at_postalcodes = (
     pd.read_excel(
         io=BytesIO(
             urlopen(
-                url=Request(url=plz_verzeichnis, headers={'User-Agent': 'Mozilla'}),
+                url=Request(url=plz_verzeichnis, headers={'User-Agent': 'Mozilla/5.0'}),
             ).read(),
         ),
         sheet_name='Plz_Anhang',
@@ -228,7 +228,8 @@ at_localities = (
     # Separate collapsed 'postal_code' column into multiple rows
     .assign(
         postal_code=lambda row: row['postal_code'].str.split(pat=' ', expand=False),
-    ).explode(column=['postal_code'])
+    )
+    .explode(column=['postal_code'])
     # Select columns
     .filter(items=['political_district_code', 'postal_code'])
     # Remove duplicate rows
@@ -250,11 +251,7 @@ at_localities = (
 
 
 # Test
-(
-    at_localities.loc[
-        at_localities.duplicated(subset=['postal_code'], keep=False)
-    ].sort_values(by=['postal_code'], ignore_index=True)
-)
+(at_localities.loc[at_localities.duplicated(subset=['postal_code'], keep=False)].sort_values(by=['postal_code'], ignore_index=True))
 
 
 ## Division of Austria into municipalities
@@ -322,30 +319,18 @@ del at_municipalities, at_postalcodes
 
 
 # Austria Shapefile - state level (first-level administrative divisions of Austria)
-(
-    at_shapefile.filter(items=['state', 'geometry'])
-    .dissolve(by='state', as_index=False, sort=True, dropna=True)
-    .plot()
-)
+(at_shapefile.filter(items=['state', 'geometry']).dissolve(by='state', as_index=False, sort=True, dropna=True).plot())
 
 pyplot.show()
 
 
 # Austria Shapefile - municipality level (third-level administrative divisions of Austria)
-(
-    at_shapefile.filter(items=['state', 'municipality', 'geometry'])
-    .dissolve(by='municipality', as_index=False, sort=True, dropna=True)
-    .plot()
-)
+(at_shapefile.filter(items=['state', 'municipality', 'geometry']).dissolve(by='municipality', as_index=False, sort=True, dropna=True).plot())
 
 pyplot.show()
 
 
 # Austria Shapefile - postal code level
-(
-    at_shapefile.filter(items=['postal_code', 'geometry'])
-    .dissolve(by='postal_code', as_index=False, sort=True, dropna=True)
-    .plot()
-)
+(at_shapefile.filter(items=['postal_code', 'geometry']).dissolve(by='postal_code', as_index=False, sort=True, dropna=True).plot())
 
 pyplot.show()
