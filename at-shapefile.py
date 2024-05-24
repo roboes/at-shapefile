@@ -1,5 +1,5 @@
 ## AT Shapefile
-# Last update: 2024-03-26
+# Last update: 2024-05-24
 
 
 """About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R."""
@@ -17,7 +17,6 @@ globals().clear()
 import os
 from io import BytesIO
 import re
-from urllib.request import Request, urlopen
 from zipfile import ZipFile, ZIP_DEFLATED
 
 import geopandas as gpd
@@ -44,16 +43,7 @@ if pd.__version__ >= '1.5.0' and pd.__version__ < '3.0.0':
 # Postlexikon - Source: Post AG, https://www.post.at/g/c/postlexikon
 
 # Get page source
-page_source = (
-    urlopen(
-        url=Request(
-            url='https://www.post.at/g/c/postlexikon',
-            headers={'User-Agent': 'Mozilla'},
-        ),
-    )
-    .read()
-    .decode(encoding='utf-8')
-)
+page_source = requests.get(url='https://www.post.at/g/c/postlexikon', headers={'User-Agent': 'Mozilla/5.0'}, timeout=5, verify=True).content.decode('utf-8')
 page_source = page_source.split(sep='\n')
 
 
@@ -83,12 +73,8 @@ austrian_states_mapping = {
 # Download and import
 at_postalcodes = (
     pd.read_excel(
-        io=BytesIO(
-            urlopen(
-                url=Request(url=plz_verzeichnis, headers={'User-Agent': 'Mozilla'}),
-            ).read(),
-        ),
-        sheet_name='Plz_Anhang',
+        io=BytesIO(initial_bytes=requests.get(url=plz_verzeichnis, headers=None, timeout=5, verify=True).content),
+        sheet_name=0,
         header=0,
         index_col=None,
         skiprows=0,
@@ -228,7 +214,8 @@ at_localities = (
     # Separate collapsed 'postal_code' column into multiple rows
     .assign(
         postal_code=lambda row: row['postal_code'].str.split(pat=' ', expand=False),
-    ).explode(column=['postal_code'])
+    )
+    .explode(column=['postal_code'])
     # Select columns
     .filter(items=['political_district_code', 'postal_code'])
     # Remove duplicate rows
@@ -250,11 +237,7 @@ at_localities = (
 
 
 # Test
-(
-    at_localities.loc[
-        at_localities.duplicated(subset=['postal_code'], keep=False)
-    ].sort_values(by=['postal_code'], ignore_index=True)
-)
+(at_localities.loc[at_localities.duplicated(subset=['postal_code'], keep=False)].sort_values(by=['postal_code'], ignore_index=True))
 
 
 ## Division of Austria into municipalities
@@ -263,11 +246,7 @@ at_localities = (
 # Download Shapefile
 with ZipFile(
     file=BytesIO(
-        initial_bytes=requests.get(
-            url='https://data.statistik.gv.at/data/OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101.zip',
-            timeout=5,
-            verify=True,
-        ).content,
+        initial_bytes=requests.get(url='https://data.statistik.gv.at/data/OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101.zip', headers=None, timeout=5, verify=True).content,
     ),
     mode='r',
     compression=ZIP_DEFLATED,
@@ -322,30 +301,18 @@ del at_municipalities, at_postalcodes
 
 
 # Austria Shapefile - state level (first-level administrative divisions of Austria)
-(
-    at_shapefile.filter(items=['state', 'geometry'])
-    .dissolve(by='state', as_index=False, sort=True, dropna=True)
-    .plot()
-)
+(at_shapefile.filter(items=['state', 'geometry']).dissolve(by='state', as_index=False, sort=True, dropna=True).plot())
 
 pyplot.show()
 
 
 # Austria Shapefile - municipality level (third-level administrative divisions of Austria)
-(
-    at_shapefile.filter(items=['state', 'municipality', 'geometry'])
-    .dissolve(by='municipality', as_index=False, sort=True, dropna=True)
-    .plot()
-)
+(at_shapefile.filter(items=['state', 'municipality', 'geometry']).dissolve(by='municipality', as_index=False, sort=True, dropna=True).plot())
 
 pyplot.show()
 
 
 # Austria Shapefile - postal code level
-(
-    at_shapefile.filter(items=['postal_code', 'geometry'])
-    .dissolve(by='postal_code', as_index=False, sort=True, dropna=True)
-    .plot()
-)
+(at_shapefile.filter(items=['postal_code', 'geometry']).dissolve(by='postal_code', as_index=False, sort=True, dropna=True).plot())
 
 pyplot.show()
