@@ -1,5 +1,5 @@
 ## AT Shapefile
-# Last update: 2024-03-26
+# Last update: 2024-05-24
 
 
 """About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R."""
@@ -17,7 +17,6 @@ globals().clear()
 import os
 from io import BytesIO
 import re
-from urllib.request import Request, urlopen
 from zipfile import ZipFile, ZIP_DEFLATED
 
 import geopandas as gpd
@@ -44,16 +43,7 @@ if pd.__version__ >= '1.5.0' and pd.__version__ < '3.0.0':
 # Postlexikon - Source: Post AG, https://www.post.at/g/c/postlexikon
 
 # Get page source
-page_source = (
-    urlopen(
-        url=Request(
-            url='https://www.post.at/g/c/postlexikon',
-            headers={'User-Agent': 'Mozilla/5.0'},
-        ),
-    )
-    .read()
-    .decode(encoding='utf-8')
-)
+page_source = requests.get(url='https://www.post.at/g/c/postlexikon', headers={'User-Agent': 'Mozilla/5.0'}, timeout=5, verify=True).content.decode('utf-8')
 page_source = page_source.split(sep='\n')
 
 
@@ -83,12 +73,8 @@ austrian_states_mapping = {
 # Download and import
 at_postalcodes = (
     pd.read_excel(
-        io=BytesIO(
-            urlopen(
-                url=Request(url=plz_verzeichnis, headers={'User-Agent': 'Mozilla/5.0'}),
-            ).read(),
-        ),
-        sheet_name='Plz_Anhang',
+        io=BytesIO(initial_bytes=requests.get(url=plz_verzeichnis, headers=None, timeout=5, verify=True).content),
+        sheet_name=0,
         header=0,
         index_col=None,
         skiprows=0,
@@ -260,11 +246,7 @@ at_localities = (
 # Download Shapefile
 with ZipFile(
     file=BytesIO(
-        initial_bytes=requests.get(
-            url='https://data.statistik.gv.at/data/OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101.zip',
-            timeout=5,
-            verify=True,
-        ).content,
+        initial_bytes=requests.get(url='https://data.statistik.gv.at/data/OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101.zip', headers=None, timeout=5, verify=True).content,
     ),
     mode='r',
     compression=ZIP_DEFLATED,
