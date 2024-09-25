@@ -1,5 +1,5 @@
 ## AT Shapefile
-# Last update: 2024-01-09
+# Last update: 2024-09-25
 
 
 ### About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R.
@@ -10,11 +10,11 @@
 ###############
 
 # Import packages
-packages_install <- function(packages){
-	new.packages <- packages[!(packages %in% installed.packages()[, "Package"])]
-	if (length(new.packages))
-	install.packages(new.packages, dependencies = TRUE)
-	sapply(packages, require, character.only = TRUE)
+
+## Given a list of packages, install (if needed) and import them
+packages_install <- function(packages) {
+  install.packages(setdiff(packages, rownames(installed.packages())), dependencies = TRUE)
+  sapply(packages, require, character.only = TRUE)
 }
 
 packages_required <- c("readxl", "sf", "tidyverse")
@@ -22,11 +22,11 @@ packages_install(packages_required)
 
 
 # Set working directory
-setwd("C:/Users/roboes/Downloads")
+setwd(file.path(path.expand("~")))
 
 
 # Erase all declared global variables
-rm(list=ls())
+remove(list = ls())
 
 
 
