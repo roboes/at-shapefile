@@ -1,5 +1,3 @@
-<meta name='keywords' content='Austria, Österreich, shapefile, python, geopandas, R, sf'>
-
 # Austrian Shapefile
 
 ## Description
@@ -21,21 +19,21 @@ Austrian shapefile - postal code level
 <img src="./media/shapefile_austria_postal_code.png" alt="Shapefile Austria" width=650>
 </p>
 
-# Usage
+## Usage
 
-## Python dependencies
+### Python dependencies
 
 ```.ps1
 python -m pip install geopandas matplotlib numpy pandas requests xlrd
 ```
 
-## R dependencies
+### R dependencies
 
 ```.r
 install.packages(c("readxl", "sf", "tidyverse"))
 ```
 
-# See also
+## See also
 
 [Statistik Austria - Regionale Gliederungen](https://www.statistik.at/services/tools/services/regionales/regionale-gliederungen/)
 
