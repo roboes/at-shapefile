@@ -74,7 +74,6 @@ at_postalcodes <- read_excel(path = "AT Postal Codes.xlsx", sheet = "Plz_Anhang"
   arrange(postal_code)
 
 
-
 ## Austria, Municipality List sort by Identifier
 # Österreichisch, Gemeindeliste sortiert nach Gemeindekennziffer - Source: Statistik Austria, https://www.statistik.at/services/tools/services/regionales/regionale-gliederungen/
 
@@ -88,7 +87,6 @@ at_municipalities <- read_delim(file = "https://www.statistik.at/verzeichnis/reg
   arrange(municipality_code)
 
 
-
 ## Austria, Political Districts
 # Österreich, Politische Bezirke - Source: Statistik Austria, https://www.statistik.at/services/tools/services/regionales/regionale-gliederungen/
 
@@ -99,7 +97,6 @@ at_political_districts <- read_delim(file = "http://www.statistik.at/verzeichnis
   mutate(across(c("political_district_code"), as.character)) |>
   select(political_district_code, political_district, state) |>
   arrange(political_district_code)
-
 
 
 ## Austria, Municipalities with Localities and Postal Codes
@@ -131,7 +128,6 @@ at_localities |>
   arrange(postal_code)
 
 
-
 ## Division of Austria into municipalities
 # Gliederung Österreichs in Gemeinden - Source: Statistik Austria, https://data.statistik.gv.at/web/meta.jsp?dataset=OGDEXT_GEM_1
 
@@ -150,7 +146,6 @@ at_shapefile <- st_read(dsn = "OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101", layer =
 
 # Delete objects
 rm(at_municipalities, at_postalcodes)
-
 
 
 # Austria Shapefile - state level (first-level administrative divisions of Austria)

@@ -2,8 +2,7 @@
 
 ## Description
 
-This repository aims to create and manipulate Austrian shapefile into multiple levels, such as state level (first-level administrative divisions of Austria), municipality level (third-level administrative divisions of Austria) and postal code level.
-The code was written in both Python and R; both codes are analogous.
+This repository aims to create and manipulate Austrian shapefile into multiple levels, such as state level (first-level administrative divisions of Austria), municipality level (third-level administrative divisions of Austria) and postal code level. The code was written in both Python and R; both codes are analogous.
 
 ## Output
 
