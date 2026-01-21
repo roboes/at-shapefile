@@ -1,5 +1,5 @@
 ## AT Shapefile
-# Last update: 2024-05-24
+# Last update: 2026-01-21
 
 
 """About: Austrian shapefile creation and manipulation using GeoPandas library in Python or sf library in R."""
@@ -23,16 +23,6 @@ import geopandas as gpd
 from matplotlib import pyplot
 import pandas as pd
 import requests
-
-
-# Settings
-
-## Set working directory
-os.chdir(path=os.path.join(os.path.expanduser('~'), 'Downloads'))
-
-## Copy-on-Write (will be enabled by default in version 3.0)
-if pd.__version__ >= '1.5.0' and pd.__version__ < '3.0.0':
-    pd.options.mode.copy_on_write = True
 
 
 ##############
@@ -73,7 +63,7 @@ austrian_states_mapping = {
 # Download and import
 at_postalcodes = (
     pd.read_excel(
-        io=BytesIO(initial_bytes=requests.get(url=plz_verzeichnis, headers=None, timeout=5, verify=True).content),
+        io=BytesIO(initial_bytes=requests.get(url=plz_verzeichnis, headers={'User-Agent': 'Mozilla'}, timeout=5, verify=True).content),
         sheet_name=0,
         header=0,
         index_col=None,
@@ -245,13 +235,11 @@ at_localities = (
 
 # Download Shapefile
 with ZipFile(
-    file=BytesIO(
-        initial_bytes=requests.get(url='https://data.statistik.gv.at/data/OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101.zip', headers=None, timeout=5, verify=True).content,
-    ),
+    file=BytesIO(initial_bytes=requests.get(url='https://data.statistik.gv.at/data/OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101.zip', headers=None, timeout=5, verify=True).content),
     mode='r',
     compression=ZIP_DEFLATED,
 ) as zip_file:
-    zip_file.extractall(path='OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101')
+    zip_file.extractall(path=os.path.join(os.path.expanduser('~'), 'Downloads', 'OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101'))
 
 # Delete objects
 del zip_file, ZIP_DEFLATED
@@ -260,7 +248,7 @@ del zip_file, ZIP_DEFLATED
 # Import
 at_shapefile = (
     gpd.read_file(
-        filename='OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101/STATISTIK_AUSTRIA_GEM_20230101.shp',
+        filename=os.path.join(os.path.expanduser('~'), 'Downloads', 'OGDEXT_GEM_1_STATISTIK_AUSTRIA_20230101', 'STATISTIK_AUSTRIA_GEM_20230101.shp'),
         layer='STATISTIK_AUSTRIA_GEM_20230101',
         include_fields=['g_id', 'g_name', 'geometry'],
         driver=None,
@@ -281,15 +269,7 @@ at_shapefile = (
     .merge(right=at_postalcodes, how='left', on=['postal_code'], indicator=False)
     # Select columns
     .filter(
-        items=[
-            'country',
-            'state',
-            'municipality_code',
-            'municipality',
-            'city',
-            'postal_code',
-            'geometry',
-        ],
+        items=['country', 'state', 'municipality_code', 'municipality', 'city', 'postal_code', 'geometry'],
     )
     # Rearrange rows
     .sort_values(by=['country', 'postal_code'], ignore_index=True)
