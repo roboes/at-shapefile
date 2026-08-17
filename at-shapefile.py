@@ -15,15 +15,14 @@ globals().clear()
 
 # Import packages
 import os
-from io import BytesIO
 import re
-from zipfile import ZipFile, ZIP_DEFLATED
+from io import BytesIO
+from zipfile import ZIP_DEFLATED, ZipFile
 
 import geopandas as gpd
-from matplotlib import pyplot
 import pandas as pd
 import requests
-
+from matplotlib import pyplot
 
 ##############
 # AT Shapefile
@@ -38,7 +37,7 @@ page_source = page_source.split(sep='\n')
 
 
 # Get latest PLZ Verzeichnis .xls file
-plz_verzeichnis = [s for s in page_source if 'title="PLZ Verzeichnis"' in s][0]
+plz_verzeichnis = next(s for s in page_source if 'title="PLZ Verzeichnis"' in s)
 plz_verzeichnis = re.sub(
     pattern=r'^.*href="(.*\.xlsx)?.*$',
     repl=r'\1',

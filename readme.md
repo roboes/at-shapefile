@@ -22,13 +22,13 @@ Austrian shapefile - postal code level
 
 ### Python dependencies
 
-```.ps1
+```ps1
 python -m pip install geopandas matplotlib numpy pandas requests xlrd
 ```
 
 ### R dependencies
 
-```.r
+```r
 install.packages(c("readxl", "sf", "tidyverse"))
 ```
 
